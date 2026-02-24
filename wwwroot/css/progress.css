@@ -1,0 +1,63 @@
+﻿.progress-dashboard {
+    padding: 20px 0 60px;
+}
+
+/* Header */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .header p {
+        color: #9aaac7;
+    }
+
+.filters button {
+    background: #0f1d36;
+    border: 1px solid #1f2a44;
+    padding: 8px 18px;
+    border-radius: 20px;
+    color: #9aaac7;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.filters .active {
+    background: #1e90ff;
+    color: white;
+}
+
+/* Stats */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background: #0b132b;
+    border: 1px solid #1f2a44;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Charts */
+
+.chart-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    flex: 1;
+    background: #0b132b;
+    border: 1px solid #1f2a44;
+    border-radius: 20px;
+    padding: 20px;
+}
