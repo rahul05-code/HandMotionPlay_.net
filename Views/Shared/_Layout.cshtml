@@ -3,47 +3,132 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HandMotionPlay_.net</title>
+    <title>@ViewData["Title"] - HandMotionPlay</title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HandMotionPlay_.net.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body class="dark-body">
+
+    <!-- ================= NAVBAR ================= -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg custom-navbar">
+
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HandMotionPlay_.net</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <div class="logo-box">✋</div>
+                    <span class="logo-text">
+                        HandMotion <span class="highlight">Play</span>
+                    </span>
+                </a>
+
+                <!-- Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Menu -->
+                <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+                    <ul class="navbar-nav gap-3">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-pill"
+                               asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-pill"
+                               asp-controller="Game" asp-action="CanvaDrawing">Games</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill"
+                               asp-controller="Progress" asp-action="Index">Progress</a>
+                        </li>
+
                     </ul>
                 </div>
+
+                <!-- Profile Icon -->
+                <div class="profile-circle">👤</div>
+
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <!-- ================= CONTENT ================= -->
+    <div class="container-fluid main-content">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HandMotionPlay_.net - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- ================= FOOTER ================= -->
+    <footer class="custom-footer">
+
+        <div class="container footer-top">
+
+            <!-- Left Section -->
+            <div class="footer-left">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="logo-box">✋</div>
+                    <span class="logo-text">
+                        HandMotion <span class="highlight">Play</span>
+                    </span>
+                </div>
+
+                <p>
+                    AI-powered hand exercise gaming platform for physiotherapy and rehabilitation.
+                    Improve hand mobility through fun, interactive games.
+                </p>
+            </div>
+
+            <!-- Platform -->
+            <div class="footer-column">
+                <h5>Platform</h5>
+                <a href="#">Games</a>
+                <a href="#">Progress</a>
+                <a href="#">How It Works</a>
+            </div>
+
+            <!-- Resources -->
+            <div class="footer-column">
+                <h5>Resources</h5>
+                <a href="#">Documentation</a>
+                <a href="#">Help Center</a>
+                <a href="#">Contact Us</a>
+            </div>
+
+            <!-- Legal -->
+            <div class="footer-column">
+                <h5>Legal</h5>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Services</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+
         </div>
+
+        <div class="footer-bottom text-center">
+            © 2026 Hand Motion Play. All rights reserved.
+            <br />
+            Built with care for rehabilitation
+        </div>
+
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Scripts -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

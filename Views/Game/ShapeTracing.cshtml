@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Shape Tracing";
+}
+
+<link rel="stylesheet" href="~/css/shape-tracing.css" />
+
+<div class="main-container">
+
+    <!-- Back -->
+    <div class="back-link">
+        ← Back to Games
+    </div>
+
+    <!-- Header -->
+    <div class="header-section">
+        <h1>Shape Tracing</h1>
+        <button class="loading-btn">Loading...</button>
+    </div>
+
+    <div class="content-wrapper">
+
+        <!-- LEFT SIDE -->
+        <div class="canvas-section">
+            <div class="canvas-box">
+                <div class="loader"></div>
+                <p>Initializing hand tracking...</p>
+            </div>
+
+            <!-- How to Play -->
+            <div class="how-to-play">
+                <h3>How to Play</h3>
+                <ul>
+                    <li>Start at the green dot and follow the dashed outline</li>
+                    <li>Point your index finger to trace the shape</li>
+                    <li>Keep your finger close to the outline for better accuracy</li>
+                    <li>Release your finger when you complete the shape</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE PANEL -->
+        <div class="control-panel">
+
+            <!-- Current Shape -->
+            <div class="card">
+                <h4>Current Shape</h4>
+                <div class="current-shape">
+                    <h2>Circle</h2>
+                    <span class="badge easy">Easy</span>
+                </div>
+            </div>
+
+            <!-- Session Stats -->
+            <div class="card">
+                <h4>Session Stats</h4>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span>00:00</span>
+                        <p>Duration</p>
+                    </div>
+                    <div class="stat-box">
+                        <span>0%</span>
+                        <p>Accuracy</p>
+                    </div>
+                    <div class="stat-box">
+                        <span>0</span>
+                        <p>Completed</p>
+                    </div>
+                    <div class="stat-box">
+                        <span>6</span>
+                        <p>Total Shapes</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Shapes -->
+            <div class="card">
+                <h4>All Shapes</h4>
+
+                <div class="shape-item active">
+                    Circle <span class="badge easy">Easy</span>
+                </div>
+
+                <div class="shape-item">
+                    Square <span class="badge easy">Easy</span>
+                </div>
+
+                <div class="shape-item">
+                    Triangle <span class="badge easy">Easy</span>
+                </div>
+
+                <div class="shape-item">
+                    Star <span class="badge medium">Medium</span>
+                </div>
+
+                <div class="shape-item">
+                    Heart <span class="badge hard">Hard</span>
+                </div>
+
+                <div class="shape-item">
+                    Infinity <span class="badge hard">Hard</span>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <button class="reset-btn">Reset Shape</button>
+            <button class="next-btn">Next Shape</button>
+
+        </div>
+    </div>
+</div>

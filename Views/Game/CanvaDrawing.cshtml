@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Canvas Drawing";
+}
+
+<link rel="stylesheet" href="~/css/canvas.css" />
+
+<div class="main-container">
+
+    <!-- Back -->
+    <div class="back-link">
+        ← Back to Games
+    </div>
+
+    <div class="header-section">
+        <h1>Canvas Drawing</h1>
+        <button class="loading-btn">Loading...</button>
+    </div>
+
+    <div class="content-wrapper">
+
+        <!-- LEFT SIDE - Canvas -->
+        <div class="canvas-section">
+            <div class="canvas-box">
+                <div class="loader"></div>
+                <p>Initializing hand tracking...</p>
+            </div>
+
+            <div class="how-to-play">
+                <h3>How to Play</h3>
+                <ul>
+                    <li>Point your index finger to draw on the canvas</li>
+                    <li>Make a pinch gesture to stop drawing</li>
+                    <li>Use the color palette and brush size controls on the right</li>
+                    <li>Download your artwork when finished</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE - Control Panel -->
+        <div class="control-panel">
+
+            <div class="card">
+                <h4>Session Stats</h4>
+                <div class="stats">
+                    <div class="stat-box">
+                        <span>00:00</span>
+                        <p>Duration</p>
+                    </div>
+                    <div class="stat-box">
+                        <span>0</span>
+                        <p>Strokes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Colors</h4>
+                <div class="colors">
+                    <div class="color blue"></div>
+                    <div class="color pink"></div>
+                    <div class="color green"></div>
+                    <div class="color yellow"></div>
+                    <div class="color orange"></div>
+                    <div class="color purple"></div>
+                    <div class="color white"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Brush Size</h4>
+                <div class="brush">
+                    <button>-</button>
+                    <span>8px</span>
+                    <button>+</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Tools</h4>
+                <button class="tool-btn">Eraser</button>
+                <button class="tool-btn">Clear Canvas</button>
+                <button class="tool-btn">Download</button>
+            </div>
+
+        </div>
+    </div>
+</div>

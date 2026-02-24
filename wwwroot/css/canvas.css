@@ -1,0 +1,163 @@
+﻿body {
+    margin: 0;
+    background-color: #050b17;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+}
+
+.main-container {
+    padding: 30px 60px;
+}
+
+.back-link {
+    color: #8aa0c6;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.loading-btn {
+    background-color: #0d3b66;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+/* Canvas */
+
+.canvas-section {
+    flex: 2;
+}
+
+.canvas-box {
+    height: 400px;
+    background-color: #0b132b;
+    border-radius: 15px;
+    border: 1px solid #1f2a44;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loader {
+    border: 4px solid #1f2a44;
+    border-top: 4px solid #1e90ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Right Panel */
+
+.control-panel {
+    flex: 1;
+}
+
+.card {
+    background-color: #0b132b;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #1f2a44;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stat-box {
+    background-color: #111c33;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 45%;
+}
+
+.colors {
+    display: flex;
+    gap: 10px;
+}
+
+.color {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.blue {
+    background: #4e73df;
+}
+
+.pink {
+    background: #ff007f;
+}
+
+.green {
+    background: #00ff7f;
+}
+
+.yellow {
+    background: #ffc107;
+}
+
+.orange {
+    background: #ff4500;
+}
+
+.purple {
+    background: #c71585;
+}
+
+.white {
+    background: #ffffff;
+}
+
+.brush {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .brush button {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background-color: #111c33;
+        border: none;
+        color: white;
+        font-size: 18px;
+    }
+
+.tool-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #111c33;
+    border: 1px solid #1f2a44;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
