@@ -1,0 +1,168 @@
+﻿.home-page section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+/* HERO */
+
+.hero h1 {
+    font-size: 42px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg,#1e90ff,#ff00cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    max-width: 600px;
+    margin: 15px auto;
+    color: #9aaac7;
+}
+
+.badge {
+    display: inline-block;
+    background: #0f1d36;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
+.hero-buttons {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: #1e90ff;
+    padding: 12px 25px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.btn-secondary {
+    background: #0f1d36;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: 1px solid #1f2a44;
+    color: white;
+    text-decoration: none;
+}
+
+/* STATS */
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+    .hero-stats h3 {
+        margin: 0;
+    }
+
+/* HAND PREVIEW */
+
+.preview-card {
+    background: #0b132b;
+    padding: 60px;
+    border-radius: 20px;
+    width: 400px;
+    margin: auto;
+}
+
+.hand-icon {
+    font-size: 60px;
+    margin-top: 20px;
+}
+
+/* GAMES */
+
+.game-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.game-box {
+    padding: 40px;
+    border-radius: 20px;
+    width: 250px;
+}
+
+.blue {
+    background: #0b132b;
+    border: 1px solid #1e90ff;
+}
+
+.pink {
+    background: #2b001a;
+    border: 1px solid #ff00cc;
+}
+
+.green {
+    background: #002b1a;
+    border: 1px solid #00ff9d;
+}
+
+/* WHY */
+
+.why-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.why-card {
+    background: #0b132b;
+    padding: 30px;
+    border-radius: 20px;
+    width: 220px;
+}
+
+/* HOW */
+
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.step {
+    background: #0b132b;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+/* CAMERA */
+
+.camera-box {
+    background: #0b132b;
+    padding: 80px;
+    border-radius: 25px;
+    margin: auto;
+    width: 80%;
+}
+
+.camera-status {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+/* CTA */
+
+.cta-section {
+    background: linear-gradient(90deg,#1e90ff22,#ff00cc22);
+    border-radius: 30px;
+    padding: 80px 20px;
+}
+
+.cta-buttons {
+    margin-top: 20px;
+}

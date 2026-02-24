@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = null;   // Remove if using shared layout
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Register - HandMotion Play</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: #0b0f1a;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+
+        .register-card {
+            background: #0f2233;
+            border-radius: 15px;
+            padding: 40px;
+            width: 420px;
+            box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
+        }
+
+        .register-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 28px;
+            background: linear-gradient(90deg, #00c6ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-control {
+            background-color: #081b29;
+            border: none;
+            color: white;
+            height: 45px;
+        }
+
+            .form-control:focus {
+                background-color: #081b29;
+                box-shadow: 0 0 5px #00c6ff;
+                color: white;
+            }
+
+        .btn-register {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border: none;
+            height: 45px;
+            font-weight: bold;
+        }
+
+            .btn-register:hover {
+                opacity: 0.9;
+            }
+
+        .navbar {
+            background-color: #0b0f1a;
+        }
+
+        .brand {
+            font-weight: bold;
+            color: #00c6ff;
+        }
+
+        .link-style {
+            color: #00c6ff;
+            text-decoration: none;
+        }
+
+            .link-style:hover {
+                text-decoration: underline;
+            }
+
+        .footer-text {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg px-4">
+        <span class="brand">HandMotion <span style="color:white;">Play</span></span>
+
+        <div class="ms-auto">
+            <a class="btn btn-outline-light btn-sm me-2" asp-controller="Account" asp-action="Login">Login</a>
+            <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">Register</a>
+        </div>
+    </nav>
+
+    <!-- Register Section -->
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="register-card">
+
+            <div class="register-title mb-4">Register</div>
+
+            <form asp-action="Register" method="post">
+
+                <div class="mb-3">
+                    <label>Email :</label>
+                    <input class="form-control" placeholder="Enter Your Email" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label>Password :</label>
+                    <input type="password" class="form-control" placeholder="Enter Password" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label>Confirm Password :</label>
+                    <input type="password" class="form-control" placeholder="Confirm Password" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-register w-100">
+                    Register
+                </button>
+
+                <div class="text-center mt-3 footer-text">
+                    Have an account?
+                    <a asp-action="Login" class="link-style">Go to Login</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
