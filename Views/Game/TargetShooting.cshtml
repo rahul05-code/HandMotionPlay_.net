@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Target Shooting";
+}
+
+<link rel="stylesheet" href="~/css/target-shooting.css" />
+
+<div class="page-wrapper">
+
+    <!-- Back -->
+    <div class="back-link">← Back to Games</div>
+
+    <!-- Header -->
+    <div class="header-section">
+        <h1>Target Shooting</h1>
+        <button class="loading-btn">Loading...</button>
+    </div>
+
+    <div class="content-wrapper">
+
+        <!-- LEFT SIDE - GAME AREA -->
+        <div class="game-section">
+            <div class="game-box">
+                <div class="loader"></div>
+                <p>Initializing hand tracking...</p>
+            </div>
+
+            <!-- How to Play -->
+            <div class="how-to-play">
+                <h3>How to Play</h3>
+                <ul>
+                    <li>Point your index finger to aim</li>
+                    <li>Pinch gesture to shoot</li>
+                    <li>Hit as many targets as possible</li>
+                    <li>Increase combo for higher score</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="side-panel">
+
+            <!-- Score Card -->
+            <div class="card score-card">
+                <div class="score-icon">🏆</div>
+                <h2>0</h2>
+                <p>Score</p>
+            </div>
+
+            <!-- Session Stats -->
+            <div class="card">
+                <h4>Session Stats</h4>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span>00:00</span>
+                        <p>Duration</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <span>0</span>
+                        <p>Hits</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <span>0x</span>
+                        <p>Max Combo</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <span>0%</span>
+                        <p>Accuracy</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="card">
+                <h4>Difficulty</h4>
+
+                <div class="difficulty active">
+                    <strong>Easy</strong>
+                    <small>Slower Targets, Easier to Hit</small>
+                </div>
+
+                <div class="difficulty">
+                    <strong>Medium</strong>
+                    <small>Balanced Challenge</small>
+                </div>
+
+                <div class="difficulty">
+                    <strong>Hard</strong>
+                    <small>Fast Targets, More Spawns</small>
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <button class="reset-btn">Reset Game</button>
+
+        </div>
+
+    </div>
+</div>

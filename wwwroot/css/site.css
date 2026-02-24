@@ -1,22 +1,120 @@
-html {
-  font-size: 14px;
+/* ================= GLOBAL ================= */
+
+.dark-body {
+    background-color: #040b18;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+a {
+    text-decoration: none;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* ================= NAVBAR ================= */
+
+.custom-navbar {
+    background-color: #040b18;
+    border-bottom: 1px solid #1f2a44;
+    padding: 15px 40px;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.logo-box {
+    width: 40px;
+    height: 40px;
+    background-color: #0f1d36;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
 }
 
-body {
-  margin-bottom: 60px;
+.logo-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+}
+
+.highlight {
+    color: #1e90ff;
+}
+
+.nav-pill {
+    padding: 8px 18px !important;
+    border-radius: 20px;
+    background-color: #0f1d36;
+    color: #9aaac7 !important;
+    transition: 0.3s;
+}
+
+    .nav-pill:hover {
+        background-color: #1e90ff;
+        color: white !important;
+    }
+
+.profile-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #0f1d36;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* ================= MAIN CONTENT ================= */
+
+.main-content {
+    min-height: 75vh;
+    padding: 30px 60px;
+}
+
+/* ================= FOOTER ================= */
+
+.custom-footer {
+    border-top: 1px solid #1f2a44;
+    padding: 50px 60px 20px;
+    background-color: #040b18;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.footer-left {
+    max-width: 350px;
+}
+
+    .footer-left p {
+        color: #9aaac7;
+        line-height: 1.6;
+    }
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .footer-column h5 {
+        margin-bottom: 10px;
+    }
+
+    .footer-column a {
+        color: #9aaac7;
+        font-size: 14px;
+    }
+
+        .footer-column a:hover {
+            color: #1e90ff;
+        }
+
+.footer-bottom {
+    margin-top: 40px;
+    color: #6c7a95;
+    font-size: 14px;
 }
