@@ -8,6 +8,11 @@ namespace HandMotionPlay_.net.Controllers
         {
             return View();
         }
+
+        public IActionResult Game()
+        {
+            return View();
+        }
         public IActionResult CanvaDrawing()
         {
             return View();
