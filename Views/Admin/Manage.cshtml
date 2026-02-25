@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Manage Games";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #050b14;
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* NAVBAR */
+    .navbar-custom {
+        background-color: #0b1624;
+        padding: 15px 40px;
+        border-bottom: 1px solid #0e2a47;
+    }
+
+    .brand {
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .brand span {
+        color: #1ea7ff;
+    }
+
+    .nav-btn {
+        margin-right: 10px;
+        border-radius: 8px;
+    }
+
+    /* PAGE TITLE */
+    .page-title {
+        margin-top: 40px;
+        margin-bottom: 5px;
+    }
+
+    .page-sub {
+        color: #8a9bb3;
+    }
+
+    /* GAME CARD */
+    .game-card {
+        background: linear-gradient(145deg, #0e223b, #091829);
+        border: 1px solid #12375a;
+        border-radius: 15px;
+        padding: 20px;
+        transition: 0.3s;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 15px rgba(0,170,255,0.4);
+    }
+
+    .badge-easy { background: #1dd1a1; }
+    .badge-medium { background: #feca57; }
+    .badge-hard { background: #ff6b6b; }
+
+    .stat-box {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .stat-box h6 {
+        margin-top: 5px;
+        font-weight: 600;
+    }
+
+    .progress {
+        height: 6px;
+        background-color: #1a2f4c;
+        margin-top: 10px;
+    }
+
+    .progress-bar {
+        background-color: #1ea7ff;
+    }
+
+    .bottom-card {
+        background-color: #0e223b;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    /* FOOTER */
+    .footer {
+        margin-top: 80px;
+        padding: 40px;
+        background-color: #0b1624;
+    }
+
+    .footer small {
+        color: #7c8da6;
+    }
+</style>
+
+<!-- NAVBAR -->
+<div class="navbar-custom d-flex justify-content-between align-items-center">
+    <div class="brand">
+        <i class="fa-solid fa-hand"></i> HandMotion <span>Play</span>
+    </div>
+
+    <div>
+        <button class="btn btn-outline-light nav-btn">Dashboard</button>
+        <button class="btn btn-outline-light nav-btn">Manage User</button>
+        <button class="btn btn-primary nav-btn">Manage Games</button>
+        <button class="btn btn-outline-light nav-btn">Analytics</button>
+        <button class="btn btn-danger">Logout</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2 class="page-title">Manage Games</h2>
+    <p class="page-sub">View and manage all available games on the platform.</p>
+
+    <div class="row mt-4 g-4">
+
+        <!-- CARD 1 -->
+        <div class="col-md-4">
+            <div class="game-card">
+                <div class="d-flex justify-content-between">
+                    <h5>Canvas Drawing</h5>
+                    <span class="badge badge-easy">Easy</span>
+                </div>
+
+                <div class="stat-box">
+                    <div>
+                        <small>Today</small>
+                        <h6>198</h6>
+                    </div>
+                    <div>
+                        <small>Total</small>
+                        <h6>4230</h6>
+                    </div>
+                    <div>
+                        <small>Avg</small>
+                        <h6>450</h6>
+                    </div>
+                </div>
+
+                <small>Player Engagement</small>
+                <div class="progress">
+                    <div class="progress-bar" style="width:75%"></div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-sm btn-outline-success">
+                        <i class="fa fa-pen"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="col-md-4">
+            <div class="game-card">
+                <div class="d-flex justify-content-between">
+                    <h5>Shape Tracing</h5>
+                    <span class="badge badge-medium">Medium</span>
+                </div>
+
+                <div class="stat-box">
+                    <div><small>Today</small><h6>198</h6></div>
+                    <div><small>Total</small><h6>4230</h6></div>
+                    <div><small>Avg</small><h6>450</h6></div>
+                </div>
+
+                <small>Player Engagement</small>
+                <div class="progress">
+                    <div class="progress-bar" style="width:65%"></div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-sm btn-outline-success">
+                        <i class="fa fa-pen"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="col-md-4">
+            <div class="game-card">
+                <div class="d-flex justify-content-between">
+                    <h5>Target Shooting</h5>
+                    <span class="badge badge-hard">Hard</span>
+                </div>
+
+                <div class="stat-box">
+                    <div><small>Today</small><h6>198</h6></div>
+                    <div><small>Total</small><h6>4230</h6></div>
+                    <div><small>Avg</small><h6>450</h6></div>
+                </div>
+
+                <small>Player Engagement</small>
+                <div class="progress">
+                    <div class="progress-bar" style="width:85%"></div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-sm btn-outline-success">
+                        <i class="fa fa-pen"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BOTTOM SUMMARY -->
+    <div class="row mt-5 g-4">
+        <div class="col-md-4">
+            <div class="bottom-card">
+                <small>Total Games</small>
+                <h5>3</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bottom-card">
+                <small>Total Players</small>
+                <h5>19,200</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bottom-card">
+                <small>Avg Score Across All Games</small>
+                <h5>617</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer text-center">
+    <h4><i class="fa-solid fa-hand"></i> HandMotion <span style="color:#1ea7ff;">Play</span></h4>
+    <p class="page-sub">AI-powered hand exercise gaming platform for physiotherapy and rehabilitation.</p>
+    <small>© 2026 Hand Motion Play. All rights reserved.</small>
+</div>
