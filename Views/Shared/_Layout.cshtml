@@ -52,7 +52,6 @@
                             <a class="nav-link nav-pill"
                                asp-controller="Progress" asp-action="Progress">Progress</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link nav-pill"
                                asp-controller="Account" asp-action="Login">Login</a>
@@ -62,12 +61,22 @@
                             <a class="nav-link nav-pill"
                                asp-controller="Account" asp-action="Register">Register</a>
                         </li>
-
                     </ul>
                 </div>
 
                 <!-- Profile Icon -->
-                <div class="profile-circle"><a asp-controller="Profile" asp-action="Profile">👤</a></div>
+                <div class="profile-circle">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <!-- After Login -->
+                        <a asp-controller="Profile" asp-action="Profile">👤</a>
+                    }
+                    else
+                    {
+                        <!-- Before Login -->
+                        <a asp-controller="Account" asp-action="Login">Login</a>
+                    }
+                </div>
             </div>
         </nav>
     </header>
