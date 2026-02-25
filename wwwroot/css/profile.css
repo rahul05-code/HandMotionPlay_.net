@@ -1,0 +1,155 @@
+﻿.profile-page {
+    padding: 30px 0 60px;
+}
+
+/* ================= HEADER ================= */
+
+.profile-header {
+    background: linear-gradient(90deg, #1e90ff, #0b132b);
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border: 1px solid #1f2a44;
+}
+
+.profile-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    background: black;
+    border-radius: 20px;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.camera {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 14px;
+}
+
+.profile-info h2 {
+    margin: 0;
+}
+
+.profile-info p {
+    color: #d1d5db;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-primary {
+    background: #1e90ff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #0f1d36;
+    border: 1px solid #1f2a44;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* ================= ABOUT ================= */
+
+.about-section {
+    background: #0b132b;
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #1f2a44;
+}
+
+    .about-section p {
+        color: #9aaac7;
+    }
+
+    .about-section textarea {
+        width: 100%;
+        height: 120px;
+        border-radius: 12px;
+        padding: 15px;
+        border: none;
+        background: #d1d5db;
+    }
+
+/* ================= INPUTS ================= */
+
+.profile-info input {
+    display: block;
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 10px;
+}
+
+/* ================= STATS ================= */
+
+.stats-row {
+    display: flex;
+    gap: 25px;
+}
+
+.stat-card {
+    flex: 1;
+    background: #0b132b;
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid #1f2a44;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+    .stat-card .icon {
+        width: 60px;
+        height: 60px;
+        background: #0f1d36;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+    }
+
+    .stat-card p {
+        margin: 0;
+        color: #9aaac7;
+    }
+
+    .stat-card h3 {
+        margin: 0;
+        color: #1e90ff;
+    }
+
+/* ================= HIDE TOGGLE ================= */
+    
+.hidden {
+    display: none;
+}
+
+/* Hide edit mode by default */
+.edit-mode {
+    display: none;
+}

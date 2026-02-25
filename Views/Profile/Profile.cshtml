@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Profile";
+}
+
+<link rel="stylesheet" href="~/css/profile.css" />
+
+<div class="profile-page">
+
+    <!-- ================= PROFILE HEADER ================= -->
+    <div class="profile-header">
+
+        <div class="profile-left">
+            <div class="avatar">
+                JD
+                <span class="camera">📷</span>
+            </div>
+
+            <!-- VIEW MODE -->
+            <div class="profile-info view-mode">
+                <h2>John Doe</h2>
+                <p>📧 john@example.com &nbsp;&nbsp; 📅 Joined January 15, 2024</p>
+            </div>
+
+            <!-- EDIT MODE -->
+            <div class="profile-info edit-mode">
+                <input type="text" value="John Doe" />
+                <input type="email" value="john@example.com" />
+            </div>
+        </div>
+
+        <div class="profile-actions view-mode">
+            <button class="btn-primary" onclick="toggleEdit()">Edit Profile</button>
+        </div>
+
+        <div class="profile-actions edit-mode">
+            <button class="btn-primary">Save</button>
+            <button class="btn-secondary" onclick="toggleEdit()">Cancel</button>
+        </div>
+
+    </div>
+
+    <!-- ================= ABOUT ================= -->
+    <div class="about-section">
+
+        <h2>About</h2>
+
+        <!-- VIEW -->
+        <p class="view-mode">
+            Hand exercise enthusiast. Love improving hand mobility!
+        </p>
+
+        <!-- EDIT -->
+        <textarea class="edit-mode">
+Hand exercise enthusiast. Love improving hand mobility!
+        </textarea>
+
+    </div>
+
+    <!-- ================= STATS ================= -->
+    <div class="stats-row">
+
+        <div class="stat-card">
+            <div class="icon">🎮</div>
+            <div>
+                <p>Total Sessions</p>
+                <h3>42</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🏆</div>
+            <div>
+                <p>Total Score</p>
+                <h3>8,500</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🎯</div>
+            <div>
+                <p>Best Session</p>
+                <h3>1,100</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">📈</div>
+            <div>
+                <p>Avg Session</p>
+                <h3>202</h3>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        function toggleEdit() {
+            document.querySelectorAll('.view-mode').forEach(el => el.classList.toggle('hidden'));
+            document.querySelectorAll('.edit-mode').forEach(el => el.classList.toggle('hidden'));
+        }
+    </script>
+}

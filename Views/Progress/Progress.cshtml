@@ -1,5 +1,161 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Progress Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/progress.css" />
+
+<div class="progress-dashboard">
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Progress Dashboard</h1>
+            <p>Track your hand exercise journey and monitor improvements</p>
+        </div>
+
+        <div class="filters">
+            <button class="active">Week</button>
+            <button>Month</button>
+            <button>All Time</button>
+        </div>
+    </div>
+
+    <!-- Top Stats -->
+    <div class="stats-grid">
+        <div class="stat-card"><h2>27</h2><p>Total Sessions</p></div>
+        <div class="stat-card"><h2>4h 32m</h2><p>Total Time</p></div>
+        <div class="stat-card"><h2>78%</h2><p>Avg Accuracy</p></div>
+        <div class="stat-card"><h2>12,420</h2><p>Total Score</p></div>
+        <div class="stat-card"><h2>7 days</h2><p>Day Streak</p></div>
+        <div class="stat-card"><h2>+23%</h2><p>Improvement</p></div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <h3>Weekly Activity</h3>
+            <canvas id="weeklyChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Accuracy Trend</h3>
+            <canvas id="accuracyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <h3>Game Distribution</h3>
+            <canvas id="distributionChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Monthly Improvement</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        // ========== Weekly Activity (Bar Chart) ==========
+        new Chart(document.getElementById('weeklyChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                datasets: [{
+                    label: 'Sessions',
+                    data: [3,4,2,5,3,6,4],
+                    backgroundColor: '#7c3aed'
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false }},
+                scales: {
+                    x: { ticks: { color: '#9aaac7' }},
+                    y: { ticks: { color: '#9aaac7' }}
+                }
+            }
+        });
+
+
+        // ========== Accuracy Trend (Line Chart) ==========
+        new Chart(document.getElementById('accuracyChart'), {
+            type: 'line',
+            data: {
+                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: [72,75,68,82,78,85,88],
+                    borderColor: '#00ff9d',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false }},
+                scales: {
+                    x: { ticks: { color: '#9aaac7' }},
+                    y: { ticks: { color: '#9aaac7' }}
+                }
+            }
+        });
+
+
+        // ========== Game Distribution (Doughnut) ==========
+        new Chart(document.getElementById('distributionChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Drawing','Tracing','Shooting'],
+                datasets: [{
+                    data: [40,35,25],
+                    backgroundColor: ['#3b82f6','#ec4899','#10b981']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: { color: '#9aaac7' }
+                    }
+                }
+            }
+        });
+
+
+        // ========== Monthly Improvement ==========
+        new Chart(document.getElementById('monthlyChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1','Week 2','Week 3','Week 4'],
+                datasets: [
+                    {
+                        label: 'Accuracy %',
+                        data: [65,72,78,85],
+                        borderColor: '#3b82f6',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Time (min)',
+                        data: [45,60,55,70],
+                        borderColor: '#ec4899',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    legend: { labels: { color: '#9aaac7' }}
+                },
+                scales: {
+                    x: { ticks: { color: '#9aaac7' }},
+                    y: { ticks: { color: '#9aaac7' }}
+                }
+            }
+        });
+
+    </script>
 }
