@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace HandMotionPlay_.net.Controllers
+namespace HandMotionPlay.Controllers
 {
-    public class GameController : Controller
+    public class GamesController : Controller
     {
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Game()
         {
             return View();
         }
