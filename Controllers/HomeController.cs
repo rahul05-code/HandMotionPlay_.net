@@ -21,6 +21,7 @@ namespace HandMotionPlay_.net.Controllers
         public IActionResult Privacy()
         {
             return View();
+/*helloo*/
         }
         public IActionResult CanvaDrawing()
         {
