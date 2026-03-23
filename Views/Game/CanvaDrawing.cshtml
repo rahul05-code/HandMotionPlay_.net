@@ -1,8 +1,8 @@
-﻿@{
+@{
     ViewData["Title"] = "Canvas Drawing";
 }
 
-<link rel="stylesheet" href="~/css/canvas.css" />
+<link rel="stylesheet" href="~/css/canvas.css" asp-append-version="true" />
 
 <div class="main-container">
 
@@ -18,13 +18,27 @@
         <button class="loading-btn">Loading...</button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
     <div class="content-wrapper">
 
         <!-- LEFT SIDE - Canvas -->
         <div class="canvas-section">
-            <div class="canvas-box">
-                <div class="loader"></div>
-                <p>Initializing hand tracking...</p>
+            <div class="canvas-box" style="position: relative; overflow: hidden; background-color: #000; display: flex; align-items: center; justify-content: center;">
+                <div class="loader" id="loadingSpinner"></div>
+                <p id="loadingText" style="position: absolute; color: white;">Initializing hand tracking...</p>
+                
+                <!-- Hidden video element for camera feed -->
+                <video id="input_video" style="display: none;"></video>
+                
+                <!-- Main Layer: Renders User Video Feed + MediaPipe Hands -->
+                <canvas id="output_canvas" style="position: absolute; top:0; left:0; width:100%; height:100%;" width="1280" height="720"></canvas>
+                
+                <!-- Drawing Layer: Renders the actual colored lines -->
+                <canvas id="draw_canvas" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none;" width="1280" height="720"></canvas>
             </div>
 
             <div class="how-to-play">
@@ -57,33 +71,37 @@
 
             <div class="card">
                 <h4>Colors</h4>
-                <div class="colors">
-                    <div class="color blue"></div>
-                    <div class="color pink"></div>
-                    <div class="color green"></div>
-                    <div class="color yellow"></div>
-                    <div class="color orange"></div>
-                    <div class="color purple"></div>
-                    <div class="color white"></div>
+                <div class="colors" id="colorPalette">
+                    <div class="color blue active" data-color="#0088ff"></div>
+                    <div class="color pink" data-color="#ff007f"></div>
+                    <div class="color green" data-color="#00e676"></div>
+                    <div class="color yellow" data-color="#ffea00"></div>
+                    <div class="color orange" data-color="#ff5e00"></div>
+                    <div class="color purple" data-color="#b000ff"></div>
+                    <div class="color white" data-color="#ffffff"></div>
                 </div>
             </div>
 
             <div class="card">
                 <h4>Brush Size</h4>
                 <div class="brush">
-                    <button>-</button>
-                    <span>8px</span>
-                    <button>+</button>
+                    <button class="brush-btn" id="decreaseBrush">-</button>
+                    <span id="brushSizeDisplay">8px</span>
+                    <button class="brush-btn" id="increaseBrush">+</button>
                 </div>
             </div>
 
             <div class="card">
                 <h4>Tools</h4>
-                <button class="tool-btn">Eraser</button>
-                <button class="tool-btn">Clear Canvas</button>
-                <button class="tool-btn">Download</button>
+                <button class="tool-btn" id="btnEraser">Eraser (Open Hand)</button>
+                <button class="tool-btn" id="btnClear">Clear (Both Open Hands)</button>
+                <button class="tool-btn" id="btnDownload">Download Art</button>
             </div>
 
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/canvas-game.js"></script>
+}

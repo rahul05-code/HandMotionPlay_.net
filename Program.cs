@@ -1,5 +1,9 @@
 using HandMotionPlay_.net.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"));
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -25,6 +40,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

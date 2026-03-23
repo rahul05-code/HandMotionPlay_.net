@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <p class="text-muted">Overview of platform statistics.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Stat Item -->
+    <div class="col-md-3">
+        <div class="card bg-primary text-white h-100 border-0 shadow">
+            <div class="card-body py-4">
+                <h5 class="card-title text-white-50">Total Users</h5>
+                <h2 class="display-5 fw-bold mb-0">@ViewBag.TotalUsers</h2>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stat Item -->
+    <div class="col-md-3">
+        <div class="card bg-success text-white h-100 border-0 shadow">
+            <div class="card-body py-4">
+                <h5 class="card-title text-white-50">Total Sessions</h5>
+                <h2 class="display-5 fw-bold mb-0">@ViewBag.TotalSessions</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat Item -->
+    <div class="col-md-3">
+        <div class="card bg-info text-white h-100 border-0 shadow">
+            <div class="card-body py-4">
+                <h5 class="card-title text-white-50">Total Score</h5>
+                <h2 class="display-5 fw-bold mb-0">@ViewBag.TotalScore</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat Item -->
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark h-100 border-0 shadow">
+            <div class="card-body py-4">
+                <h5 class="card-title text-dark-50">Avg. Accuracy</h5>
+                <h2 class="display-5 fw-bold mb-0">@Math.Round(@ViewBag.AvgAccuracy, 2)%</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h4>Quick Links</h4>
+        <div class="d-flex gap-3 mt-3">
+            <a asp-controller="AdminUsers" asp-action="Index" class="btn btn-outline-primary px-4 py-2">Manage Users</a>
+            <a asp-controller="AdminGames" asp-action="Index" class="btn btn-outline-success px-4 py-2">Manage Games</a>
+            <a asp-controller="Analytics" asp-action="Index" class="btn btn-outline-info px-4 py-2">View Analytics</a>
+        </div>
+    </div>
+</div>

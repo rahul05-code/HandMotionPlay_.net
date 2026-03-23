@@ -1,0 +1,51 @@
+@model HandMotionPlay_.net.Models.UserModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold">Edit User</h2>
+            <p class="text-muted">Modify user details.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Users</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card admin-card border-secondary">
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3 font-weight-bold"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label text-muted">Name</label>
+                        <input asp-for="Name" class="form-control admin-input" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label text-muted">Email</label>
+                        <input asp-for="Email" type="email" class="form-control admin-input" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Role" class="form-label text-muted">Role</label>
+                        <select asp-for="Role" class="form-select admin-select">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

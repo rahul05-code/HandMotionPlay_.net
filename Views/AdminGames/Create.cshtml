@@ -1,0 +1,54 @@
+@model HandMotionPlay_.net.Models.GameModel
+@{
+    ViewData["Title"] = "Add New Game";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold mb-4">Add New Game</h2>
+        
+        <div class="card admin-card border-secondary">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label text-muted">Game Name</label>
+                        <input asp-for="Name" class="form-control admin-input" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label text-muted">Description</label>
+                        <textarea asp-for="Description" class="form-control admin-input" rows="3" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Difficulty" class="form-label text-muted">Difficulty</label>
+                        <select asp-for="Difficulty" class="form-select admin-select">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                        <span asp-validation-for="Difficulty" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" checked />
+                        <label asp-for="IsActive" class="form-check-label text-muted">Active</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4">Save Game</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -12,17 +12,26 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
-<body class="dark-body">
+<body>
+    <!-- Script to prevent FOUC by setting theme early -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 
     <!-- ================= NAVBAR ================= -->
-    <header>
+    <header class="sticky-top" style="z-index: 1050; background-color: var(--bg-main);">
         <nav class="navbar navbar-expand-lg custom-navbar">
 
             <div class="container-fluid">
 
                 <!-- Logo -->
                 <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
-                    <div class="logo-box">✋</div>
+                    <div class="logo-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+                    </div>
                     <span class="logo-text">
                         HandMotion <span class="highlight">Play</span>
                     </span>
@@ -36,47 +45,91 @@
 
                 <!-- Menu -->
                 <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
-                    <ul class="navbar-nav gap-3">
+                    <ul class="navbar-nav gap-3 align-items-center">
+                        @if (User.IsInRole("admin"))
+                        {
+                            var path = Context.Request.Path.Value ?? "";
 
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill"
-                               asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill"
-                               asp-controller="Game" asp-action="Game">Games</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill"
-                               asp-controller="Progress" asp-action="Progress">Progress</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill"
-                               asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill"
-                               asp-controller="Account" asp-action="Register">Register</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link admin-nav-link @(path.Contains("AdminDashboard") ? "active-admin" : "")" 
+                                   asp-controller="AdminDashboard" asp-action="Index">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link admin-nav-link @(path.Contains("AdminUsers") ? "active-admin" : "")" 
+                                   asp-controller="AdminUsers" asp-action="Index">Manage User</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link admin-nav-link @(path.Contains("AdminGames") ? "active-admin" : "")" 
+                                   asp-controller="AdminGames" asp-action="Index">Manage Games</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link admin-nav-link @(path.Contains("Analytics") ? "active-admin" : "")" 
+                                   asp-controller="Analytics" asp-action="Index">Analytics</a>
+                            </li>
+                            <li class="nav-item ms-2">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link admin-nav-link text-white" 
+                                            style="background-color: var(--danger); border-color: var(--danger);">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill" asp-controller="Game" asp-action="Game">Games</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill" asp-controller="Progress" asp-action="Progress">Progress</a>
+                            </li>
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link nav-pill" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-pill" asp-controller="Account" asp-action="Register">Register</a>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
 
-                <!-- Profile Icon -->
-                <div class="profile-circle">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <!-- After Login -->
-                        <a asp-controller="Profile" asp-action="Profile">👤</a>
-                    }
-                    else
-                    {
-                        <!-- Before Login -->
-                        <a asp-controller="Account" asp-action="Login">Login</a>
-                    }
-                </div>
+                <!-- Theme Toggle -->
+                <button class="theme-toggle-btn me-3 ms-3 d-flex align-items-center justify-content-center" id="themeToggleBtn" title="Toggle Theme">
+                    <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+
+                @if (!User.IsInRole("admin"))
+                {
+                    <!-- Profile Icon & Logout -->
+                    <div class="d-flex align-items-center gap-3">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="profile-circle" title="Profile">
+                                <a asp-controller="Profile" asp-action="Profile" class="d-flex h-100 w-100 align-items-center justify-content-center text-decoration-none text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </a>
+                            </div>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 20px;">Logout</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="profile-circle" title="Login">
+                                <a asp-controller="Account" asp-action="Login" class="d-flex h-100 w-100 align-items-center justify-content-center text-decoration-none text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </nav>
     </header>
@@ -96,7 +149,9 @@
             <!-- Left Section -->
             <div class="footer-left">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <div class="logo-box">✋</div>
+                    <div class="logo-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+                    </div>
                     <span class="logo-text">
                         HandMotion <span class="highlight">Play</span>
                     </span>
@@ -144,7 +199,7 @@
 
     <!-- Scripts -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 

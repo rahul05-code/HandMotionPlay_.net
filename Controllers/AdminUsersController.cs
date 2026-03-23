@@ -1,13 +1,11 @@
-﻿using HandMotionPlay_.net.Data;
-using Microsoft.AspNetCore.Http;
+using HandMotionPlay_.net.Data;
+using HandMotionPlay_.net.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HandMotionPlay_.net.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdminUsersController : ControllerBase
+    public class AdminUsersController : Controller
     {
         private readonly AppDbContext _context;
 
@@ -16,18 +14,46 @@ namespace HandMotionPlay_.net.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> Index()
         {
             var users = await _context.Users
                 .Include(u => u.UserStat)
                 .ToListAsync();
 
-            return Ok(users);
+            return View(users);
         }
 
-        [HttpPut("change-status/{id}")]
-        public async Task<IActionResult> ChangeStatus(Guid id, [FromQuery] string status)
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
+
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, UserModel model)
+        {
+            if (id != model.Id)
+                return BadRequest();
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
+
+            user.Name = model.Name;
+            user.Email = model.Email;
+            user.Role = model.Role;
+            // Not updating password directly here for security simplicity. Status has its own toggle.
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(Guid id, string status)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -37,7 +63,19 @@ namespace HandMotionPlay_.net.Controllers
             user.Status = status;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Status updated" });
+            return RedirectToAction(nameof(Index));
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

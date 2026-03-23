@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Analytics";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold">Platform Analytics</h2>
+            <p class="text-muted">Trends and insights based on user activity.</p>
+        </div>
+        <a asp-controller="AdminDashboard" asp-action="Index" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card admin-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Sessions (Last 7 Days)</h5>
+                <canvas id="sessionsChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card admin-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Average Accuracy Trend</h5>
+                <canvas id="accuracyChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const sessionData = @Html.Raw(Json.Serialize(ViewBag.SessionData));
+        const accuracyData = @Html.Raw(Json.Serialize(ViewBag.AccuracyData));
+
+        const sessionCtx = document.getElementById('sessionsChart').getContext('2d');
+        new Chart(sessionCtx, {
+            type: 'bar',
+            data: {
+                labels: sessionData.map(d => d.date),
+                datasets: [{
+                    label: 'Sessions',
+                    data: sessionData.map(d => d.count),
+                    backgroundColor: '#1b6ec2'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+        new Chart(accuracyCtx, {
+            type: 'line',
+            data: {
+                labels: accuracyData.map(d => d.date),
+                datasets: [{
+                    label: 'Avg Accuracy (%)',
+                    data: accuracyData.map(d => d.avgAccuracy),
+                    borderColor: '#28a745',
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    </script>
+}

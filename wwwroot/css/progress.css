@@ -1,4 +1,4 @@
-﻿.progress-dashboard {
+.progress-dashboard {
     padding: 20px 0 60px;
 }
 
@@ -11,21 +11,23 @@
 }
 
     .header p {
-        color: #9aaac7;
+        color: var(--text-muted);
     }
 
 .filters button {
-    background: #0f1d36;
-    border: 1px solid #1f2a44;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     padding: 8px 18px;
     border-radius: 20px;
-    color: #9aaac7;
+    color: var(--text-muted);
     margin-left: 10px;
     cursor: pointer;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .filters .active {
-    background: #1e90ff;
+    background: var(--primary);
+    border-color: var(--primary);
     color: white;
 }
 
@@ -39,11 +41,12 @@
 }
 
 .stat-card {
-    background: #0b132b;
-    border: 1px solid #1f2a44;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 15px;
     padding: 20px;
     text-align: center;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 /* Charts */
@@ -56,8 +59,9 @@
 
 .chart-card {
     flex: 1;
-    background: #0b132b;
-    border: 1px solid #1f2a44;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 20px;
     padding: 20px;
+    transition: background 0.3s, border-color 0.3s;
 }

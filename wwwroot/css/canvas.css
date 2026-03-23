@@ -1,4 +1,4 @@
-﻿body {
+body {
     margin: 0;
     background-color: #050b17;
     font-family: 'Segoe UI', sans-serif;
@@ -42,7 +42,8 @@
 }
 
 .canvas-box {
-    height: 400px;
+    width: 100%;
+    min-height: 550px;
     background-color: #0b132b;
     border-radius: 15px;
     border: 1px solid #1f2a44;

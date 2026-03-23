@@ -1,13 +1,10 @@
-﻿using HandMotionPlay_.net.Data;
-using Microsoft.AspNetCore.Http;
+using HandMotionPlay_.net.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HandMotionPlay_.net.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AnalyticsController : ControllerBase
+    public class AnalyticsController : Controller
     {
         private readonly AppDbContext _context;
 
@@ -16,39 +13,47 @@ namespace HandMotionPlay_.net.Controllers
             _context = context;
         }
 
-        [HttpGet("weekly-sessions")]
-        public async Task<IActionResult> GetWeeklySessions()
+        public async Task<IActionResult> Index()
         {
             var last7Days = DateTime.UtcNow.AddDays(-7);
 
-            var data = await _context.Sessions
+            var sessionGroups = await _context.Sessions
                 .Where(x => x.SessionDate >= last7Days)
                 .GroupBy(x => x.SessionDate.Date)
                 .Select(g => new
                 {
-                    date = g.Key,
-                    count = g.Count()
+                    Date = g.Key,
+                    Count = g.Count()
                 })
-                .OrderBy(x => x.date)
+                .OrderBy(x => x.Date)
                 .ToListAsync();
 
-            return Ok(data);
-        }
+            var sessionData = sessionGroups.Select(x => new
+            {
+                Date = x.Date.ToString("yyyy-MM-dd"),
+                Count = x.Count
+            }).ToList();
 
-        [HttpGet("accuracy-trend")]
-        public async Task<IActionResult> GetAccuracyTrend()
-        {
-            var data = await _context.Sessions
+            var accuracyGroups = await _context.Sessions
                 .GroupBy(x => x.SessionDate.Date)
                 .Select(g => new
                 {
-                    date = g.Key,
-                    avgAccuracy = g.Average(x => x.Accuracy)
+                    Date = g.Key,
+                    AvgAccuracy = g.Average(x => x.Accuracy)
                 })
-                .OrderBy(x => x.date)
+                .OrderBy(x => x.Date)
                 .ToListAsync();
 
-            return Ok(data);
+            var accuracyData = accuracyGroups.Select(x => new
+            {
+                Date = x.Date.ToString("yyyy-MM-dd"),
+                AvgAccuracy = Math.Round((decimal)x.AvgAccuracy, 2)
+            }).ToList();
+
+            ViewBag.SessionData = sessionData;
+            ViewBag.AccuracyData = accuracyData;
+
+            return View();
         }
     }
 }
