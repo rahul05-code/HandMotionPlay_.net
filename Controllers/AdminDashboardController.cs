@@ -1,13 +1,10 @@
-﻿using HandMotionPlay_.net.Data;
-using Microsoft.AspNetCore.Http;
+using HandMotionPlay_.net.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HandMotionPlay_.net.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdminDashboardController : ControllerBase
+    public class AdminDashboardController : Controller
     {
         private readonly AppDbContext _context;
 
@@ -16,21 +13,19 @@ namespace HandMotionPlay_.net.Controllers
             _context = context;
         }
 
-        [HttpGet("summary")]
-        public async Task<IActionResult> GetDashboardSummary()
+        public async Task<IActionResult> Index()
         {
             var totalUsers = await _context.Users.CountAsync();
             var totalSessions = await _context.Sessions.CountAsync();
             var totalScore = await _context.Sessions.SumAsync(x => (long?)x.Score) ?? 0;
             var avgAccuracy = await _context.Sessions.AverageAsync(x => (decimal?)x.Accuracy) ?? 0;
 
-            return Ok(new
-            {
-                totalUsers,
-                totalSessions,
-                totalScore,
-                avgAccuracy
-            });
+            ViewBag.TotalUsers = totalUsers;
+            ViewBag.TotalSessions = totalSessions;
+            ViewBag.TotalScore = totalScore;
+            ViewBag.AvgAccuracy = avgAccuracy;
+
+            return View();
         }
     }
 }

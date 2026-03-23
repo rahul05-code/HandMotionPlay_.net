@@ -1,0 +1,49 @@
+@model IEnumerable<HandMotionPlay_.net.Models.GameModel>
+@{
+    ViewData["Title"] = "Manage Games";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold">Manage Games</h2>
+            <p class="text-muted">View, add, and manage games.</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="btn btn-primary">Add New Game</a>
+            <a asp-controller="AdminDashboard" asp-action="Index" class="btn btn-outline-secondary ms-2">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var game in Model)
+    {
+        <div class="col-md-4">
+            <div class="card admin-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-primary">@game.Name</h5>
+                    <p class="card-text text-muted">@game.Description</p>
+                    <p class="card-text mb-1"><small><strong>Difficulty:</strong> @game.Difficulty</small></p>
+                    <p class="card-text mb-3">
+                        <small>
+                            <strong>Status:</strong> 
+                            <span class="@(game.IsActive ? "text-success" : "text-danger")">
+                                @(game.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </small>
+                    </p>
+                    <form asp-action="Delete" asp-route-id="@game.Id" method="post" onsubmit="return confirm('Are you sure you want to delete @game.Name?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center text-muted py-5">
+            <h5>No games found. Try adding one.</h5>
+        </div>
+    }
+</div>

@@ -1,14 +1,11 @@
-﻿using HandMotionPlay_.net.Data;
+using HandMotionPlay_.net.Data;
 using HandMotionPlay_.net.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HandMotionPlay_.net.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdminGamesController : ControllerBase
+    public class AdminGamesController : Controller
     {
         private readonly AppDbContext _context;
 
@@ -17,23 +14,42 @@ namespace HandMotionPlay_.net.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllGames()
+        public async Task<IActionResult> Index()
         {
             var games = await _context.Games
                 .Include(g => g.GameStat)
                 .ToListAsync();
 
-            return Ok(games);
+            return View(games);
+        }
+        
+        public IActionResult Create()
+        {
+            return View();
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddGame(GameModel model)
+        [HttpPost]
+        public async Task<IActionResult> Create(GameModel model)
         {
-            _context.Games.Add(model);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Game added successfully" });
+            if (ModelState.IsValid)
+            {
+                _context.Games.Add(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var game = await _context.Games.FindAsync(id);
+            if (game != null)
+            {
+                _context.Games.Remove(game);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
