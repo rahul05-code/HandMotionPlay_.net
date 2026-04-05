@@ -18,18 +18,14 @@
         <button class="loading-btn">Loading...</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <div class="content-wrapper">
 
         <!-- LEFT SIDE - Canvas -->
         <div class="canvas-section">
-            <div class="canvas-box" style="position: relative; overflow: hidden; background-color: #000; display: flex; align-items: center; justify-content: center;">
+            <div class="canvas-box" style="position: relative; overflow: hidden; background-color: var(--card-bg); display: flex; align-items: center; justify-content: center;">
                 <div class="loader" id="loadingSpinner"></div>
-                <p id="loadingText" style="position: absolute; color: white;">Initializing hand tracking...</p>
+                <p id="loadingText" style="position: absolute; color: var(--text-main);">Initializing hand tracking...</p>
                 
                 <!-- Hidden video element for camera feed -->
                 <video id="input_video" style="display: none;"></video>
@@ -103,5 +99,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/canvas-game.js"></script>
+    <script type="module" src="~/js/canvas-game.js"></script>
 }

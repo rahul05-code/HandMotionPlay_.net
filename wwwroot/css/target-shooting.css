@@ -1,10 +1,4 @@
-﻿body {
-    margin: 0;
-    background-color: #040b18;
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
-}
-
+/* Inherit body from site.css */
 .page-wrapper {
     padding: 30px 60px;
 }
@@ -24,11 +18,11 @@
 }
 
 .loading-btn {
-    background-color: #1b4f9c;
+    background-color: var(--bg-secondary);
     padding: 10px 20px;
     border-radius: 20px;
-    border: none;
-    color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
 }
 
 /* Layout */
@@ -45,9 +39,9 @@
 
 .game-box {
     height: 400px;
-    background-color: #0b132b;
+    background-color: var(--card-bg);
     border-radius: 15px;
-    border: 1px solid #1f2a44;
+    border: 1px solid var(--card-border);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,8 +49,8 @@
 }
 
 .loader {
-    border: 4px solid #1f2a44;
-    border-top: 4px solid #1e90ff;
+    border: 4px solid var(--card-border);
+    border-top: 4px solid var(--primary);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -77,17 +71,18 @@
 }
 
 .card {
-    background-color: #0b132b;
+    background-color: var(--card-bg);
     padding: 20px;
     border-radius: 15px;
-    border: 1px solid #1f2a44;
+    border: 1px solid var(--card-border);
     margin-bottom: 20px;
+    color: var(--text-main);
 }
 
 .score-card {
     text-align: center;
-    background-color: #0d223f;
-    border: 1px solid #1e90ff;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--primary);
 }
 
 .score-icon {
@@ -105,7 +100,7 @@
 }
 
 .stat-box {
-    background-color: #111c33;
+    background-color: var(--bg-secondary);
     padding: 15px;
     border-radius: 10px;
     text-align: center;
@@ -114,7 +109,7 @@
 /* Difficulty */
 
 .difficulty {
-    background-color: #111c33;
+    background-color: var(--bg-secondary);
     padding: 12px;
     border-radius: 10px;
     margin-top: 10px;
@@ -124,12 +119,12 @@
 
     .difficulty small {
         display: block;
-        color: #9aaac7;
+        color: var(--text-muted);
     }
 
     .difficulty.active {
-        border: 1px solid #1e90ff;
-        background-color: #0f1d36;
+        border: 1px solid var(--primary);
+        background-color: var(--card-bg);
     }
 
 /* Reset Button */

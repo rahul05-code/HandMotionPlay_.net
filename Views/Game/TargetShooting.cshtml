@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Target Shooting";
 }
 
@@ -23,9 +23,13 @@
 
         <!-- LEFT SIDE - GAME AREA -->
         <div class="game-section">
-            <div class="game-box">
-                <div class="loader"></div>
-                <p>Initializing hand tracking...</p>
+            <div class="game-box" style="position: relative; overflow: hidden; background-color: var(--card-bg); display: flex; align-items: center; justify-content: center; width: 100%; height: 550px; border-radius: 16px; border: 1px solid var(--border-color);">
+                <div class="loader" id="loadingSpinner"></div>
+                <p id="loadingText" style="position: absolute; z-index: 10;">Initializing hand tracking...</p>
+                <video id="videoRef" style="display: none;" autoPlay playsInline></video>
+                <canvas id="cursorCanvasRef" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: var(--card-bg);"></canvas>
+                <canvas id="canvasRef" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;"></canvas>
+                <div id="comboText" style="display: none; position: absolute; top: 20px; right: 20px; z-index: 5; color: var(--accent); font-size: 2rem; font-weight: bold; text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);"></div>
             </div>
 
             <!-- How to Play -->
@@ -104,3 +108,7 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <script type="module" src="~/js/target-shooting.js"></script>
+}

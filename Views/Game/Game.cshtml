@@ -1,4 +1,5 @@
-﻿@{
+@model IEnumerable<HandMotionPlay_.net.Models.GameModel>
+@{
     ViewData["Title"] = "Game Library";
 }
 
@@ -19,19 +20,19 @@
     <!-- Stats Row -->
     <div class="stats-row">
         <div class="stat-card">
-            <h2>3</h2>
+            <h2>@ViewBag.TotalGames</h2>
             <p>Total Games</p>
         </div>
         <div class="stat-card">
-            <h2>3K+</h2>
+            <h2>@ViewBag.ActivePlayers</h2>
             <p>Active Players</p>
         </div>
         <div class="stat-card">
-            <h2>1.2K</h2>
+            <h2>@ViewBag.SessionsToday</h2>
             <p>Sessions Today</p>
         </div>
         <div class="stat-card">
-            <h2>23%</h2>
+            <h2>@ViewBag.AvgImprovement%</h2>
             <p>Avg. Improvement</p>
         </div>
     </div>
@@ -39,89 +40,35 @@
     <!-- Game Cards -->
     <div class="game-cards">
 
-        <!-- Canvas Drawing -->
-        <div class="game-card blue-card">
-            <span class="badge easy">Easy</span>
-            <h3>Canvas Drawing</h3>
-            <p>
-                Draw in the air using your index finger.
-                Express creativity while improving fine motor control.
-            </p>
+        @foreach (var game in Model)
+        {
+            // Pick a random card style class to keep it colorful
+            var cardColors = new[] { "blue", "pink", "green", "purple" };
+            var cardColor = cardColors[game.Id % cardColors.Length];
 
-            <div class="meta">
-                <span>⏱ 5-10 min</span>
-                <span>👥 1K+ playing</span>
+            <div class="game-card @(cardColor)-card" style="display: flex; flex-direction: column;">
+                <span class="badge @(game.Difficulty.ToLower())">@game.Difficulty</span>
+                <h3>@game.Name</h3>
+                <p>@game.Description</p>
+
+                <div class="benefits flex-grow-1">
+                    <strong>Benefits:</strong>
+                    <ul>
+                        @if (!string.IsNullOrEmpty(game.Benefits))
+                        {
+                            foreach(var benefit in game.Benefits.Split(','))
+                            {
+                                <li>@benefit.Trim()</li>
+                            }
+                        }
+                    </ul>
+                </div>
+
+                <a class="play-btn @(cardColor)-btn mt-auto" asp-controller="Game" asp-action="@(game.ActionName ?? "Index")">
+                    Play Now →
+                </a>
             </div>
-
-            <div class="benefits">
-                <strong>Benefits:</strong>
-                <ul>
-                    <li>Fine motor control</li>
-                    <li>Hand-eye coordination</li>
-                    <li>Creative expression</li>
-                </ul>
-            </div>
-
-            <a class="play-btn blue-btn" asp-controller="Game" asp-action="CanvaDrawing">
-                Play Now →
-            </a>
-        </div>
-
-        <!-- Shape Tracing -->
-        <div class="game-card pink-card">
-            <span class="badge medium">Medium</span>
-            <h3>Shape Tracing</h3>
-            <p>
-                Follow the outline of various shapes to enhance
-                precision and hand-eye coordination.
-            </p>
-
-            <div class="meta">
-                <span>⏱ 3-5 min</span>
-                <span>👥 850+ playing</span>
-            </div>
-
-            <div class="benefits">
-                <strong>Benefits:</strong>
-                <ul>
-                    <li>Precision control</li>
-                    <li>Pattern recognition</li>
-                    <li>Steady hand movement</li>
-                </ul>
-            </div>
-
-            <a class="play-btn pink-btn" asp-controller="Game" asp-action="ShapeTracing">
-                Play Now →
-            </a>
-        </div>
-
-        <!-- Target Shooting -->
-        <div class="game-card green-card">
-            <span class="badge hard">Hard</span>
-            <h3>Target Shooting</h3>
-            <p>
-                Aim and shoot targets using finger gestures.
-                Develop quick reflexes and accuracy.
-            </p>
-
-            <div class="meta">
-                <span>⏱ 5-15 min</span>
-                <span>👥 1.2K+ playing</span>
-            </div>
-
-            <div class="benefits">
-                <strong>Benefits:</strong>
-                <ul>
-                    <li>Quick reflexes</li>
-                    <li>Finger pointing accuracy</li>
-                    <li>Hand speed</li>
-                </ul>
-            </div>
-
-            <a class="play-btn green-btn" asp-controller="Game" asp-action="TargetShooting">
-                Play Now →
-            </a>
-        </div>
+        }
 
     </div>
 

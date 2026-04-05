@@ -1,305 +1,374 @@
-// DOM Elements
-const videoElement = document.getElementById('input_video');
-const canvasElement = document.getElementById('output_canvas');
-const canvasCtx = canvasElement.getContext('2d');
+import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.12/vision_bundle.mjs";
 
-const drawCanvasElement = document.getElementById('draw_canvas');
-const drawCtx = drawCanvasElement.getContext('2d');
+const PINCH_THRESHOLD = 0.06;
 
-// UI Elements
-const spinner = document.getElementById('loadingSpinner');
-const loadingText = document.getElementById('loadingText');
-const colorSwatches = document.querySelectorAll('.color');
-const brushSizeDisplay = document.getElementById('brushSizeDisplay');
-const btnDecrease = document.getElementById('decreaseBrush');
-const btnIncrease = document.getElementById('increaseBrush');
-const btnEraser = document.getElementById('btnEraser');
-const btnClear = document.getElementById('btnClear');
-const btnDownload = document.getElementById('btnDownload');
-
-// State Variables
-let isDrawing = false;
-let isErasing = false;
-let lastX = 0;
-let lastY = 0;
-let currentColor = '#0088ff';
-let currentBrushSize = 8;
-let cooldownCounter = 0; // Prevent rapid color/size switching every frame
-const COOLDOWN_FRAMES = 15;
-
-// Initialization
-function initializeCanvases() {
-    // Match internal resolution to actual DOM display size
-    const rect = canvasElement.parentElement.getBoundingClientRect();
-    const w = rect.width || 1280;
-    const h = rect.height || 720;
-
-    canvasElement.width = w;
-    canvasElement.height = h;
-    drawCanvasElement.width = w;
-    drawCanvasElement.height = h;
-
-    // Set initial drawing styles
-    drawCtx.lineCap = 'round';
-    drawCtx.lineJoin = 'round';
-    drawCtx.strokeStyle = currentColor;
-    drawCtx.lineWidth = currentBrushSize;
-}
-
-// MediaPipe Hands Setup
-const hands = new Hands({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    }
-});
-
-hands.setOptions({
-    maxNumHands: 2,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.7
-});
-
-hands.onResults(onResults);
-
-const camera = new Camera(videoElement, {
-    onFrame: async () => {
-        await hands.send({ image: videoElement });
-    },
-    width: 1280,
-    height: 720
-});
-
-// Start Camera
-camera.start().then(() => {
-    // Hide loaders once started
-    if (spinner) spinner.style.display = 'none';
-    if (loadingText) loadingText.style.display = 'none';
-    initializeCanvases();
-});
-
-
-// Helper functions for gesture math
-function calculateDistance(p1, p2) {
-    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-}
-
-function countExtendedFingers(landmarks) {
+const getExtendedFingers = (landmarks) => {
     let count = 0;
-    // Thumb: Compare tip x to ip x (rough heuristic given different hand orientations)
-    if (landmarks[4].x < landmarks[3].x) count++; // Assuming right hand facing camera
-    
-    // Index, Middle, Ring, Pinky
     if (landmarks[8].y < landmarks[6].y) count++;
     if (landmarks[12].y < landmarks[10].y) count++;
     if (landmarks[16].y < landmarks[14].y) count++;
     if (landmarks[20].y < landmarks[18].y) count++;
-    
+
+    const distTip = Math.abs(landmarks[4].x - landmarks[9].x);
+    const distIp = Math.abs(landmarks[3].x - landmarks[9].x);
+    if (distTip > distIp + 0.02) count++;
+
     return count;
-}
+};
 
+const getPinchDistance = (landmarks) => {
+    const dx = landmarks[8].x - landmarks[4].x;
+    const dy = landmarks[8].y - landmarks[4].y;
+    const dz = landmarks[8].z - landmarks[4].z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+};
 
-// Main Render Loop
-function onResults(results) {
-    // Update logic counters
-    if (cooldownCounter > 0) cooldownCounter--;
+// UI Elements
+const video = document.getElementById('input_video');
+const canvas = document.getElementById('draw_canvas'); // Actually draws the line
+const cursorCanvas = document.getElementById('output_canvas'); // Video feed & brush preview
+const loadingSpinner = document.getElementById('loadingSpinner');
+const loadingText = document.getElementById('loadingText');
+const loadingBtn = document.querySelector('.loading-btn');
 
-    // 1. Draw camera feed and hand landmarks
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    
-    // Mirror the video horizontally for intuitive interaction
-    canvasCtx.translate(canvasElement.width, 0);
-    canvasCtx.scale(-1, 1);
+// Control elements
+const colorSelects = document.querySelectorAll('.colors .color');
+const prevBrushBtn = document.getElementById('decreaseBrush');
+const nextBrushBtn = document.getElementById('increaseBrush');
+const brushSizeDisplay = document.getElementById('brushSizeDisplay');
+const btnEraser = document.getElementById('btnEraser');
+const btnClear = document.getElementById('btnClear');
+const btnDownload = document.getElementById('btnDownload');
 
-    // Draw raw video to bottom canvas
-    if (results.image) {
-        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+// Stats elements
+const statsDisplay = document.querySelectorAll('.stat-box span');
+const durationDisplay = statsDisplay[0];
+const strokesDisplay = statsDisplay[statsDisplay.length > 0 ? 1 : 0] || document.createElement('span'); // fallback
+
+let ctx, cursorCtx;
+if (canvas) ctx = canvas.getContext('2d');
+if (cursorCanvas) cursorCtx = cursorCanvas.getContext('2d', { willReadFrequently: true });
+
+let handLandmarker = null;
+let animationId = null;
+
+// Game State
+let isModelLoaded = false;
+let currentColor = '#0088ff';
+let brushSize = 8;
+let isErasing = false;
+let startTime = Date.now();
+let strokesCount = 0;
+
+let isDrawing = false;
+let lastX = null;
+let lastY = null;
+let lastTime = -1;
+let lastClearCall = 0;
+let lastUiSyncTime = 0;
+
+let fingerCountStable = 0;
+let fingerCountValue = -1;
+
+const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+};
+
+// Start Timing
+setInterval(() => {
+    if (isModelLoaded && durationDisplay) {
+        durationDisplay.innerText = formatTime(Math.floor((Date.now() - startTime) / 1000));
+    }
+}, 1000);
+
+const updateColorUI = (newColor) => {
+    currentColor = newColor;
+    isErasing = false;
+    colorSelects.forEach(el => {
+        if (el.getAttribute('data-color') === newColor) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+    if (btnEraser) btnEraser.classList.remove('active-tool');
+};
+
+const clearDrawCanvas = () => {
+    if (strokesCount > 0) {
+        const duration = Math.floor((Date.now() - startTime) / 1000);
+        const payload = {
+            GameId: 1, // Canvas Drawing
+            Score: strokesCount * 5,
+            Accuracy: 100, // Drawing doesn't have an accuracy metric per se
+            DurationSeconds: duration
+        };
+        fetch('/api/Session/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error('Failed to save session', err));
     }
 
-    let drawingHand = null;
-    let controlHand = null;
+    if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        strokesCount = 0;
+        startTime = Date.now();
+        if (strokesDisplay) strokesDisplay.innerText = strokesCount;
+    }
+};
 
-    if (results.multiHandLandmarks && results.multiHandedness) {
-        
-        // Identify drawing hand (typically dominant/first found) and control hand
-        for (let i = 0; i < results.multiHandLandmarks.length; i++) {
-            const landmarks = results.multiHandLandmarks[i];
-            const classification = results.multiHandedness[i].label; // 'Right' or 'Left'
+const downloadArt = () => {
+    if (canvas) {
+        const link = document.createElement('a');
+        link.download = `handmotion-play-drawing-${Date.now()}.png`;
 
-            // Draw visual landmarks over hands
-            drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 3 });
-            drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.fillStyle = '#0a0e17'; 
+        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tCtx.drawImage(canvas, 0, 0);
 
-            // We'll treat the first detected hand as drawing, second as control for simplicity 
-            // no matter if it's left or right due to webcam mirroring rules.
-            if (i === 0) drawingHand = landmarks;
-            if (i === 1) controlHand = landmarks;
+        link.href = tempCanvas.toDataURL('image/png');
+        link.click();
+    }
+};
+
+// UI Listeners
+colorSelects.forEach(el => {
+    el.addEventListener('click', () => updateColorUI(el.getAttribute('data-color')));
+});
+
+if (prevBrushBtn) prevBrushBtn.addEventListener('click', () => { brushSize = Math.max(2, brushSize - 2); brushSizeDisplay.innerText = `${brushSize}px`; });
+if (nextBrushBtn) nextBrushBtn.addEventListener('click', () => { brushSize = Math.min(40, brushSize + 2); brushSizeDisplay.innerText = `${brushSize}px`; });
+if (btnEraser) btnEraser.addEventListener('click', () => { 
+    isErasing = !isErasing; 
+    btnEraser.classList.toggle('active-tool', isErasing);
+});
+if (btnClear) btnClear.addEventListener('click', clearDrawCanvas);
+if (btnDownload) btnDownload.addEventListener('click', downloadArt);
+
+const UI_COLORS = ['#ffffff', '#0088ff', '#ff007f', '#00e676', '#ffea00']; // Mapping 1-5 fingers to these colors natively
+
+async function initializeMediaPipe() {
+    try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert("Camera API is not available in browsers over unsecure HTTP. Please use HTTPS or access via localhost.");
+            if (loadingText) loadingText.innerText = "Camera API blocked by browser security.";
+            return;
         }
 
-        // ==========================================
-        // BOTH HANDS LOGIC (CLEAR CANVAS)
-        // ==========================================
-        if (drawingHand && controlHand) {
-            const fingers1 = countExtendedFingers(drawingHand);
-            const fingers2 = countExtendedFingers(controlHand);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 1280, height: 720, facingMode: "user" }
+            });
+            video.srcObject = stream;
+            video.setAttribute('autoplay', 'true');
+            video.setAttribute('playsinline', 'true');
+            video.play();
+        } catch (camErr) {
+            alert("Camera error: " + camErr.message + ". Please ensure camera permissions are not blocked in url bar.");
+            if (loadingText) loadingText.innerText = "Camera access denied.";
+            return;
+        }
 
-            if (fingers1 >= 4 && fingers2 >= 4) {
-                if (cooldownCounter === 0) {
-                    drawCtx.clearRect(0, 0, drawCanvasElement.width, drawCanvasElement.height);
-                    cooldownCounter = COOLDOWN_FRAMES * 2; // Extra cooldown for clear
-                    return; // Skip other gestures if clearing
+        const vision = await FilesetResolver.forVisionTasks("/wasm");
+        handLandmarker = await HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath: `/wasm/hand_landmarker.task`,
+                delegate: "GPU"
+            },
+            runningMode: "VIDEO",
+            numHands: 2
+        });
+
+        video.addEventListener("loadeddata", () => {
+            isModelLoaded = true;
+            startTime = Date.now();
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (loadingText) loadingText.style.display = 'none';
+            if (loadingBtn) loadingBtn.innerText = "AI Active";
+            loadingBtn.classList.add('btn-success');
+            predictWebcam();
+        });
+        if (video.readyState >= 2) {
+            isModelLoaded = true;
+            startTime = Date.now();
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (loadingText) loadingText.style.display = 'none';
+            if (loadingBtn) loadingBtn.innerText = "AI Active";
+            loadingBtn.classList.add('bg-success');
+            predictWebcam();
+        }
+    } catch (err) {
+        console.error("Error init MediaPipe", err);
+        if (loadingText) loadingText.innerText = "Failed to load camera/AI";
+    }
+}
+
+function predictWebcam() {
+    if (!video || !canvas || !cursorCanvas || !handLandmarker) return;
+
+    const container = canvas.parentElement;
+    if (canvas.width !== container.clientWidth || canvas.height !== container.clientHeight) {
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        cursorCanvas.width = container.clientWidth;
+        cursorCanvas.height = container.clientHeight;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+    }
+
+    let startTimeMs = performance.now();
+
+    cursorCtx.save();
+    cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+    cursorCtx.translate(cursorCanvas.width, 0);
+    cursorCtx.scale(-1, 1);
+
+    const vRatio = cursorCanvas.width / video.videoWidth;
+    const hRatio = cursorCanvas.height / video.videoHeight;
+    const ratio = Math.max(vRatio, hRatio);
+    const centerShift_x = (cursorCanvas.width - video.videoWidth * ratio) / 2;
+    const centerShift_y = (cursorCanvas.height - video.videoHeight * ratio) / 2;
+
+    cursorCtx.globalAlpha = 0.3;
+    cursorCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight,
+        centerShift_x, centerShift_y, video.videoWidth * ratio, video.videoHeight * ratio);
+    cursorCtx.globalAlpha = 1.0;
+    cursorCtx.restore();
+
+    if (lastTime !== video.currentTime && isModelLoaded) {
+        lastTime = video.currentTime;
+        let results = handLandmarker.detectForVideo(video, startTimeMs);
+
+        let drawnThisFrame = false;
+        let currentX = 0;
+        let currentY = 0;
+        let isCursorActive = false;
+
+        if (results.landmarks && results.landmarks.length > 0) {
+            isCursorActive = true;
+            const primary = results.landmarks[0];
+            const p1 = getPinchDistance(primary);
+            const f1 = getExtendedFingers(primary);
+
+            const isPinching = p1 < PINCH_THRESHOLD;
+            const isOpen = f1 >= 4;
+
+            currentX = (1 - primary[8].x) * canvas.width;
+            currentY = primary[8].y * canvas.height;
+
+            let isModifyingSize = false;
+
+            // Secondary hand logic
+            if (results.landmarks.length > 1) {
+                const secondary = results.landmarks[1];
+                const p2 = getPinchDistance(secondary);
+                const f2 = getExtendedFingers(secondary);
+                const o2 = f2 >= 4;
+
+                if (isOpen && o2) {
+                    const now = Date.now();
+                    if (now - lastClearCall > 1500) {
+                        clearDrawCanvas();
+                        lastClearCall = now;
+                    }
+                }
+                else if (isOpen && p2 < 0.2 && f2 < 4) {
+                    isModifyingSize = true;
+                    let size = Math.max(2, Math.min(40, p2 * 300));
+                    const roundedSize = Math.round(size);
+                    if (Math.abs(roundedSize - brushSize) >= 1) {
+                        brushSize = roundedSize;
+                        const now = Date.now();
+                        if (now - lastUiSyncTime > 100) {
+                            if (brushSizeDisplay) brushSizeDisplay.innerText = `${brushSize}px`;
+                            lastUiSyncTime = now;
+                        }
+                    }
+                }
+                else if (isPinching) {
+                    if (f2 >= 1 && f2 <= 5) {
+                        if (f2 === fingerCountValue) {
+                            fingerCountStable += 1;
+                            if (fingerCountStable > 10) {
+                                const newUiColor = UI_COLORS[Math.min(f2 - 1, 4)];
+                                if (currentColor !== newUiColor) {
+                                    currentColor = newUiColor;
+                                    const now = Date.now();
+                                    if (now - lastUiSyncTime > 100) {
+                                        updateColorUI(currentColor);
+                                        lastUiSyncTime = now;
+                                    }
+                                }
+                            }
+                        } else {
+                            fingerCountValue = f2;
+                            fingerCountStable = 0;
+                        }
+                    }
                 }
             }
-        }
 
-        // ==========================================
-        // CONTROL HAND LOGIC (LEFT HAND typically)
-        // ==========================================
-        if (controlHand && cooldownCounter === 0) {
-            
-            // 1. Change Colors (Based on finger count)
-            // Index up = Color 1, +Middle = Color 2, etc. (1-5 range)
-            const extended = countExtendedFingers(controlHand);
-            if (extended > 0 && extended <= 5) {
-                // We have 7 colors, let's map 1-5 to the first 5 colors
-                switchToColorIndex(extended - 1);
-                cooldownCounter = COOLDOWN_FRAMES;
-            }
-
-            // 2. Change Brush Size (Pinch distance)
-            const pinchDist = calculateDistance(controlHand[4], controlHand[8]); // Thumb tip to Index tip
-            // If thumb and index fingers are the only ones mainly involved
-            if (extended <= 2 && pinchDist < 0.1) {
-                // Distance is small -> Pinch recognized
-                // Logic based on Y movement of the pinch (up increases, down decreases)
-                // For simplicity as requested: "close this then point size increase or decrese"
-                // Let's implement robust UI buttons as backup, and a simple toggle up/down
-                
-                // If pinch is high on screen (y < 0.5), increase. Low -> decrease
-                if (controlHand[8].y < 0.4) {
-                    changeBrushSize(currentBrushSize + 2);
-                    cooldownCounter = COOLDOWN_FRAMES / 2;
-                } else if (controlHand[8].y > 0.6) {
-                    changeBrushSize(currentBrushSize - 2);
-                    cooldownCounter = COOLDOWN_FRAMES / 2;
+            if (isPinching) {
+                drawnThisFrame = true;
+                if (isErasing) {
+                    isErasing = false;
+                    if (btnEraser) btnEraser.classList.remove('active-tool');
                 }
             }
+            else if (isOpen && !isModifyingSize) {
+                // Secondary fallback for erase (holding hand completely open)
+                drawnThisFrame = false; // changed this logic from React if you just hold hand open it doesn't draw. To erase wait till pinch.
+            }
         }
 
-        // ==========================================
-        // DRAWING HAND LOGIC
-        // ==========================================
-        if (drawingHand) {
-            const indexTip = drawingHand[8];
-            const middleTip = drawingHand[12];
-            
-            // Map relative coordinates to canvas pixels
-            const px = indexTip.x * drawCanvasElement.width;
-            const py = indexTip.y * drawCanvasElement.height;
+        if (isCursorActive) {
+            cursorCtx.beginPath();
+            cursorCtx.arc(currentX, currentY, brushSize / 2 + 4, 0, 2 * Math.PI);
+            cursorCtx.fillStyle = isErasing ? '#ffffff' : currentColor;
+            cursorCtx.fill();
+            cursorCtx.lineWidth = 2;
+            cursorCtx.strokeStyle = isErasing ? '#ff0000' : '#ffffff';
+            cursorCtx.stroke();
 
-            // Gesture: Index + Thumb up, others down = DRAW
-            // Simplified: Index Finger is extended, Middle finger is down
-            if (indexTip.y < drawingHand[6].y && middleTip.y > drawingHand[10].y) {
-                
-                // Start drawing path if wasn't drawing
+            if (drawnThisFrame) {
                 if (!isDrawing) {
                     isDrawing = true;
-                    lastX = px;
-                    lastY = py;
+                    lastX = currentX;
+                    lastY = currentY;
+                    strokesCount++;
+                    if (strokesDisplay) strokesDisplay.innerText = strokesCount;
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(currentX, currentY);
+                    
+                    ctx.strokeStyle = isErasing ? "#0a0e17" : currentColor;
+                    ctx.lineWidth = brushSize;
+                    ctx.globalCompositeOperation = isErasing ? "destination-out" : "source-over";
+                    ctx.stroke();
+
+                    lastX = currentX;
+                    lastY = currentY;
                 }
-
-                // Draw Line
-                drawCtx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
-                drawCtx.lineWidth = isErasing ? currentBrushSize * 3 : currentBrushSize;
-
-                drawCtx.beginPath();
-                drawCtx.moveTo(lastX, lastY);
-                drawCtx.lineTo(px, py);
-                drawCtx.stroke();
-
-                // Update last positions
-                lastX = px;
-                lastY = py;
-
-                // Draw a small indicator circle on the video canvas to show the cursor
-                canvasCtx.beginPath();
-                canvasCtx.arc(px, py, currentBrushSize / 2, 0, 2 * Math.PI);
-                canvasCtx.fillStyle = isErasing ? '#FFFFFF' : currentColor;
-                canvasCtx.fill();
-
             } else {
-                // Not drawing
                 isDrawing = false;
             }
-
-            // Gesture: Erase (All fingers open on drawing hand)
-            const fingersDrawing = countExtendedFingers(drawingHand);
-            if (fingersDrawing >= 4) {
-                isErasing = true;
-                btnEraser.textContent = "Eraser [ACTIVE]";
-                btnEraser.style.backgroundColor = 'var(--danger)';
-            } else {
-                isErasing = false;
-                btnEraser.textContent = "Eraser (Open Hand)";
-                btnEraser.style.backgroundColor = 'var(--card-border)';
-            }
+        } else {
+            isDrawing = false;
         }
-
-    } else {
-        // No hands detected
-        isDrawing = false;
     }
-    canvasCtx.restore();
+
+    animationId = requestAnimationFrame(predictWebcam);
 }
 
-// ==========================================
-// UI INTERACTION HOOKS (Mouse fallbacks)
-// ==========================================
-
-function switchToColorIndex(index) {
-    if (index >= 0 && index < colorSwatches.length) {
-        colorSwatches.forEach(c => c.classList.remove('active'));
-        colorSwatches[index].classList.add('active');
-        currentColor = colorSwatches[index].getAttribute('data-color');
-        drawCtx.strokeStyle = currentColor;
-        isErasing = false; // Reset eraser if picking color
-    }
+// Init
+if (video) {
+    initializeMediaPipe();
 }
-
-colorSwatches.forEach((swatch, index) => {
-    swatch.addEventListener('click', () => {
-        switchToColorIndex(index);
-    });
-});
-
-function changeBrushSize(newSize) {
-    if (newSize >= 2 && newSize <= 50) {
-        currentBrushSize = newSize;
-        brushSizeDisplay.textContent = currentBrushSize + 'px';
-        drawCtx.lineWidth = currentBrushSize;
-    }
-}
-
-btnDecrease.addEventListener('click', () => changeBrushSize(currentBrushSize - 2));
-btnIncrease.addEventListener('click', () => changeBrushSize(currentBrushSize + 2));
-
-btnEraser.addEventListener('click', () => {
-    isErasing = !isErasing;
-    if(isErasing) {
-        btnEraser.style.backgroundColor = 'var(--danger)';
-    } else {
-        btnEraser.style.backgroundColor = 'var(--card-border)';
-    }
-});
-
-btnClear.addEventListener('click', () => {
-    drawCtx.clearRect(0, 0, drawCanvasElement.width, drawCanvasElement.height);
-});
-
-btnDownload.addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.download = 'handmotion-art.png';
-    link.href = drawCanvasElement.toDataURL();
-    link.click();
-});
