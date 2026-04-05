@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Shape Tracing";
 }
 
@@ -23,9 +23,30 @@
 
         <!-- LEFT SIDE -->
         <div class="canvas-section">
-            <div class="canvas-box">
-                <div class="loader"></div>
-                <p>Initializing hand tracking...</p>
+            <div class="canvas-box" style="position: relative; overflow: hidden; background-color: var(--card-bg); display: flex; align-items: center; justify-content: center; width: 100%; height: 550px; border-radius: 16px; border: 1px solid var(--border-color);">
+                <div class="loader" id="loadingSpinner"></div>
+                <p id="loadingText" style="position: absolute; z-index: 10;">Initializing hand tracking...</p>
+                
+                <video id="videoRef" style="display: none;" autoPlay playsInline></video>
+                <canvas id="cursorCanvasRef" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: var(--card-bg);"></canvas>
+                <canvas id="canvasRef" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;"></canvas>
+                
+                <div id="successOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 50; flex-direction: column; align-items: center; justify-content: center; color: white; backdrop-filter: blur(4px);">
+                    <div style="font-size: 64px; color: var(--success); margin-bottom: 1rem;">🏆</div>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff;">Perfect!</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">You traced the <span id="overlayShapeName"></span> successfully.</p>
+                    <div style="display: flex; gap: 2rem; margin-bottom: 2.5rem;">
+                        <div style="text-align: center;">
+                            <div id="overlayAccuracy" style="font-size: 2rem; font-weight: bold; color: var(--success);">100%</div>
+                            <div style="font-size: 0.9rem; text-transform: uppercase;">Accuracy</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div id="overlayTime" style="font-size: 2rem; font-weight: bold; color: var(--primary);">00:00</div>
+                            <div style="font-size: 0.9rem; text-transform: uppercase;">Time</div>
+                        </div>
+                    </div>
+                    <button class="next-btn" style="background: var(--primary); color: white; border: none; border-radius: 50px; padding: 1rem 3rem; font-size: 1.2rem; cursor: pointer;">Next Shape</button>
+                </div>
             </div>
 
             <!-- How to Play -->
@@ -111,3 +132,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script type="module" src="~/js/shape-tracing.js"></script>
+}

@@ -1,4 +1,4 @@
-﻿namespace HandMotionPlay_.net.Models
+namespace HandMotionPlay_.net.Models
 {
     public class GameModel
     {
@@ -7,6 +7,9 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string Difficulty { get; set; }
+        public string? PhotoPath { get; set; }
+        public string? Benefits { get; set; }
+        public string? ActionName { get; set; }
 
         public bool IsActive { get; set; } = true;
 

@@ -21,10 +21,11 @@
     {
         <div class="col-md-4">
             <div class="card admin-card h-100">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title fw-bold text-primary">@game.Name</h5>
-                    <p class="card-text text-muted">@game.Description</p>
+                    <p class="card-text text-muted flex-grow-1">@game.Description</p>
                     <p class="card-text mb-1"><small><strong>Difficulty:</strong> @game.Difficulty</small></p>
+                    <p class="card-text mb-1"><small><strong>Action Name:</strong> @(game.ActionName ?? "Default")</small></p>
                     <p class="card-text mb-3">
                         <small>
                             <strong>Status:</strong> 
@@ -33,9 +34,17 @@
                             </span>
                         </small>
                     </p>
-                    <form asp-action="Delete" asp-route-id="@game.Id" method="post" onsubmit="return confirm('Are you sure you want to delete @game.Name?');">
-                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">Delete</button>
-                    </form>
+                    <div class="d-flex gap-2">
+                        <form asp-action="ToggleActive" asp-route-id="@game.Id" method="post" class="flex-grow-1">
+                            <button type="submit" class="btn btn-sm w-100 @(game.IsActive ? "btn-warning" : "btn-success")">
+                                @(game.IsActive ? "Deactivate" : "Activate")
+                            </button>
+                        </form>
+                        <a asp-action="Edit" asp-route-id="@game.Id" class="btn btn-sm btn-info flex-grow-1">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@game.Id" method="post" class="flex-grow-1" onsubmit="return confirm('Are you sure you want to delete @game.Name?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">Delete</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

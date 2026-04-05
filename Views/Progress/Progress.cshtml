@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Progress Dashboard";
 }
 
@@ -22,12 +22,12 @@
 
     <!-- Top Stats -->
     <div class="stats-grid">
-        <div class="stat-card"><h2>27</h2><p>Total Sessions</p></div>
-        <div class="stat-card"><h2>4h 32m</h2><p>Total Time</p></div>
-        <div class="stat-card"><h2>78%</h2><p>Avg Accuracy</p></div>
-        <div class="stat-card"><h2>12,420</h2><p>Total Score</p></div>
-        <div class="stat-card"><h2>7 days</h2><p>Day Streak</p></div>
-        <div class="stat-card"><h2>+23%</h2><p>Improvement</p></div>
+        <div class="stat-card"><h2>@ViewBag.TotalSessions</h2><p>Total Sessions</p></div>
+        <div class="stat-card"><h2>@ViewBag.TotalTime</h2><p>Total Time</p></div>
+        <div class="stat-card"><h2>@ViewBag.AvgAccuracy%</h2><p>Avg Accuracy</p></div>
+        <div class="stat-card"><h2>@ViewBag.TotalScore</h2><p>Total Score</p></div>
+        <div class="stat-card"><h2>@ViewBag.DayStreak days</h2><p>Day Streak</p></div>
+        <div class="stat-card"><h2>@(ViewBag.Improvement > 0 ? "+" : "")@ViewBag.Improvement%</h2><p>Improvement</p></div>
     </div>
 
     <!-- Charts Row 1 -->
@@ -67,10 +67,10 @@
         new Chart(document.getElementById('weeklyChart'), {
             type: 'bar',
             data: {
-                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                labels: @Html.Raw(ViewBag.WeeklyLabels),
                 datasets: [{
                     label: 'Sessions',
-                    data: [3,4,2,5,3,6,4],
+                    data: @Html.Raw(ViewBag.WeeklyActivityData),
                     backgroundColor: '#7c3aed'
                 }]
             },
@@ -88,10 +88,10 @@
         new Chart(document.getElementById('accuracyChart'), {
             type: 'line',
             data: {
-                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                labels: @Html.Raw(ViewBag.WeeklyLabels),
                 datasets: [{
                     label: 'Accuracy %',
-                    data: [72,75,68,82,78,85,88],
+                    data: @Html.Raw(ViewBag.WeeklyAccuracyData),
                     borderColor: '#00ff9d',
                     tension: 0.4
                 }]
@@ -110,9 +110,9 @@
         new Chart(document.getElementById('distributionChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Drawing','Tracing','Shooting'],
+                labels: @Html.Raw(ViewBag.DistributionLabels),
                 datasets: [{
-                    data: [40,35,25],
+                    data: @Html.Raw(ViewBag.DistributionData),
                     backgroundColor: ['#3b82f6','#ec4899','#10b981']
                 }]
             },
@@ -130,17 +130,17 @@
         new Chart(document.getElementById('monthlyChart'), {
             type: 'line',
             data: {
-                labels: ['Week 1','Week 2','Week 3','Week 4'],
+                labels: @Html.Raw(ViewBag.MonthlyLabels),
                 datasets: [
                     {
                         label: 'Accuracy %',
-                        data: [65,72,78,85],
+                        data: @Html.Raw(ViewBag.MonthlyAccuracyData),
                         borderColor: '#3b82f6',
                         tension: 0.4
                     },
                     {
                         label: 'Time (min)',
-                        data: [45,60,55,70],
+                        data: @Html.Raw(ViewBag.MonthlyTimeData),
                         borderColor: '#ec4899',
                         tension: 0.4
                     }

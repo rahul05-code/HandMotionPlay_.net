@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Profile";
 }
 
@@ -11,21 +11,21 @@
 
         <div class="profile-left">
             <div class="avatar">
-                JD
+                @(string.IsNullOrEmpty(ViewBag.User.Name) ? "??" : ViewBag.User.Name.Substring(0, 1).ToUpper() + (ViewBag.User.Name.Length > 1 && ViewBag.User.Name.Contains(" ") ? ViewBag.User.Name.Split(" ")[1].Substring(0, 1).ToUpper() : ""))
                 <span class="camera">📷</span>
             </div>
 
             <!-- VIEW MODE -->
             <div class="profile-info view-mode">
-                <h2>John Doe</h2>
-                <p>📧 john@example.com &nbsp;&nbsp; 📅 Joined January 15, 2024</p>
+                <h2>@ViewBag.User.Name</h2>
+                <p>📧 @ViewBag.User.Email &nbsp;&nbsp; 📅 Joined @ViewBag.User.CreatedAt.ToString("MMMM dd, yyyy")</p>
             </div>
 
             <!-- EDIT MODE -->
-            <div class="profile-info edit-mode">
-                <input type="text" value="John Doe" />
-                <input type="email" value="john@example.com" />
-            </div>
+            <form asp-controller="Profile" asp-action="UpdateProfile" method="post" class="profile-info edit-mode" id="profileForm" style="display: flex; gap: 10px;">
+                <input type="text" name="name" value="@ViewBag.User.Name" required />
+                <input type="email" name="email" value="@ViewBag.User.Email" required />
+            </form>
         </div>
 
         <div class="profile-actions view-mode">
@@ -33,8 +33,8 @@
         </div>
 
         <div class="profile-actions edit-mode">
-            <button class="btn-primary">Save</button>
-            <button class="btn-secondary" onclick="toggleEdit()">Cancel</button>
+            <button type="submit" form="profileForm" class="btn-primary">Save</button>
+            <button type="button" class="btn-secondary" onclick="toggleEdit()">Cancel</button>
         </div>
 
     </div>
@@ -63,7 +63,7 @@ Hand exercise enthusiast. Love improving hand mobility!
             <div class="icon">🎮</div>
             <div>
                 <p>Total Sessions</p>
-                <h3>42</h3>
+                <h3>@ViewBag.TotalSessions</h3>
             </div>
         </div>
 
@@ -71,7 +71,7 @@ Hand exercise enthusiast. Love improving hand mobility!
             <div class="icon">🏆</div>
             <div>
                 <p>Total Score</p>
-                <h3>8,500</h3>
+                <h3>@ViewBag.TotalScore</h3>
             </div>
         </div>
 
@@ -79,7 +79,7 @@ Hand exercise enthusiast. Love improving hand mobility!
             <div class="icon">🎯</div>
             <div>
                 <p>Best Session</p>
-                <h3>1,100</h3>
+                <h3>@ViewBag.BestSession</h3>
             </div>
         </div>
 
@@ -87,7 +87,7 @@ Hand exercise enthusiast. Love improving hand mobility!
             <div class="icon">📈</div>
             <div>
                 <p>Avg Session</p>
-                <h3>202</h3>
+                <h3>@ViewBag.AvgSession</h3>
             </div>
         </div>
 

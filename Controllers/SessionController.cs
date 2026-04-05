@@ -1,8 +1,9 @@
-﻿using HandMotionPlay_.net.Data;
+using HandMotionPlay_.net.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HandMotionPlay_.net.Models;
+using System.Security.Claims;
 
 namespace HandMotionPlay_.net.Controllers
 {
@@ -18,9 +19,14 @@ namespace HandMotionPlay_.net.Controllers
         }
 
         [HttpPost("add")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> AddSession([FromBody] SessionModel model)
         {
+            var userIdStr = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdStr, out Guid userId)) return Unauthorized();
+
             model.Id = Guid.NewGuid();
+            model.UserId = userId; // Securely assign
             model.SessionDate = DateTime.UtcNow;
 
             _context.Sessions.Add(model);
