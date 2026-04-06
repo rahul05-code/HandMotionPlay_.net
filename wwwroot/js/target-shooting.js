@@ -79,7 +79,7 @@ const setDifficulty = (idx) => {
 
 difficultyBtns.forEach((btn, i) => btn.addEventListener('click', () => setDifficulty(i)));
 
-const handleReset = () => {
+const saveSessionData = () => {
     if (shots > 0) {
         const accuracy = shots > 0 ? (hits / shots) * 100 : 0;
         const payload = {
@@ -91,9 +91,18 @@ const handleReset = () => {
         fetch('/api/Session/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            keepalive: true
         }).catch(err => console.error('Failed to save session', err));
     }
+};
+
+window.addEventListener('beforeunload', () => {
+    saveSessionData();
+});
+
+const handleReset = () => {
+    saveSessionData();
 
     targets = [];
     particles = [];
