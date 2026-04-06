@@ -1,4 +1,4 @@
-﻿.profile-page {
+.profile-page {
     padding: 30px 0 60px;
 }
 
@@ -13,6 +13,12 @@
     align-items: center;
     margin-bottom: 30px;
     border: 1px solid #1f2a44;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+[data-theme='light'] .profile-header {
+    background: linear-gradient(90deg, #bfdbfe, var(--card-bg));
+    border-color: var(--card-border);
 }
 
 .profile-left {
@@ -24,7 +30,7 @@
 .avatar {
     width: 100px;
     height: 100px;
-    background: black;
+    background: var(--bg-secondary);
     border-radius: 20px;
     font-size: 40px;
     font-weight: bold;
@@ -32,6 +38,8 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
 }
 
 .camera {
@@ -43,10 +51,17 @@
 
 .profile-info h2 {
     margin: 0;
+    color: white;
+}
+[data-theme='light'] .profile-info h2 {
+    color: var(--text-main);
 }
 
 .profile-info p {
     color: #d1d5db;
+}
+[data-theme='light'] .profile-info p {
+    color: var(--text-muted);
 }
 
 /* ================= BUTTONS ================= */
@@ -61,27 +76,29 @@
 }
 
 .btn-secondary {
-    background: #0f1d36;
-    border: 1px solid #1f2a44;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     padding: 10px 20px;
     border-radius: 10px;
-    color: white;
+    color: var(--text-main);
     cursor: pointer;
     margin-left: 10px;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
 /* ================= ABOUT ================= */
 
 .about-section {
-    background: #0b132b;
+    background: var(--card-bg);
     padding: 30px;
     border-radius: 20px;
     margin-bottom: 30px;
-    border: 1px solid #1f2a44;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s, border-color 0.3s;
 }
 
     .about-section p {
-        color: #9aaac7;
+        color: var(--text-muted);
     }
 
     .about-section textarea {
@@ -89,8 +106,10 @@
         height: 120px;
         border-radius: 12px;
         padding: 15px;
-        border: none;
-        background: #d1d5db;
+        border: 1px solid var(--border-color);
+        background: var(--bg-secondary);
+        color: var(--text-main);
+        transition: background 0.3s, border-color 0.3s, color 0.3s;
     }
 
 /* ================= INPUTS ================= */
@@ -100,8 +119,11 @@
     width: 300px;
     padding: 10px;
     border-radius: 10px;
-    border: none;
+    border: 1px solid var(--border-color);
     margin-bottom: 10px;
+    background: var(--bg-secondary);
+    color: var(--text-main);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
 /* ================= STATS ================= */
@@ -113,34 +135,36 @@
 
 .stat-card {
     flex: 1;
-    background: #0b132b;
+    background: var(--card-bg);
     border-radius: 20px;
     padding: 25px;
-    border: 1px solid #1f2a44;
+    border: 1px solid var(--card-border);
     display: flex;
     align-items: center;
     gap: 15px;
+    transition: background 0.3s, border-color 0.3s;
 }
 
     .stat-card .icon {
         width: 60px;
         height: 60px;
-        background: #0f1d36;
+        background: var(--bg-secondary);
         border-radius: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 24px;
+        transition: background 0.3s;
     }
 
     .stat-card p {
         margin: 0;
-        color: #9aaac7;
+        color: var(--text-muted);
     }
 
     .stat-card h3 {
         margin: 0;
-        color: #1e90ff;
+        color: var(--primary);
     }
 
 /* ================= HIDE TOGGLE ================= */
