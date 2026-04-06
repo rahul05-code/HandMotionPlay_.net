@@ -96,7 +96,7 @@ const updateColorUI = (newColor) => {
     if (btnEraser) btnEraser.classList.remove('active-tool');
 };
 
-const clearDrawCanvas = () => {
+const saveSessionData = () => {
     if (strokesCount > 0) {
         const duration = Math.floor((Date.now() - startTime) / 1000);
         const payload = {
@@ -108,15 +108,19 @@ const clearDrawCanvas = () => {
         fetch('/api/Session/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            keepalive: true
         }).catch(err => console.error('Failed to save session', err));
     }
+};
 
+window.addEventListener('beforeunload', () => {
+    saveSessionData();
+});
+
+const clearDrawCanvas = () => {
     if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        strokesCount = 0;
-        startTime = Date.now();
-        if (strokesDisplay) strokesDisplay.innerText = strokesCount;
     }
 };
 

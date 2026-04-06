@@ -158,12 +158,10 @@ const saveSession = () => {
 };
 
 const handleReset = () => {
-    saveSession();
     setupShape();
 };
 
 const handleNextShape = () => {
-    saveSession();
     currentShapeIndex = (currentShapeIndex + 1) % SHAPES.length;
     setupShape();
 };
@@ -344,6 +342,9 @@ function predictWebcam() {
                                     isShapeComplete = true;
                                     completed++;
                                     if (completedDisplay) completedDisplay.innerText = completed;
+                                    
+                                    // Automate save upon shape completion
+                                    saveSession();
                                     
                                     // Show success overlay
                                     if (successOverlay) {
